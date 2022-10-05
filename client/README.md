@@ -8,7 +8,7 @@ Once you have downloaded the repository, to run the cleint you first have to run
 
 - Start the server application (see README located in the server folder for steps)
 - From root directory type `cd client` into your terminal
-- You will now be in the server directory, in this directory type `npm install` to install all dependencies
+- You will now be in the client directory, in this directory type `npm install` to install all dependencies
 - Once dependancies have installed type `npm start` to start the client
 
 Once the client has started, you should recieve a confirmation message in the console, and the application should launch in a new internet tab.
