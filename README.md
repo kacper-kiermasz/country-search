@@ -1,6 +1,6 @@
 # Country search
 
-This repository contains code for both the server and client of a country search application.
+This repository contains code for both the server and client of a country search application. This readme has been updatd
 
 ## Running the program
 
