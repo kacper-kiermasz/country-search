@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
-import Header from "./components/Header";
-import Result from "./components/Result";
-import Search from "./components/Search";
+import Header from "./components/Header.jsx";
+import Result from "./components/Result.jsx";
+import Search from "./components/Search.jsx";
 
 function App() {
   const [countries, setCountries] = useState([]);
