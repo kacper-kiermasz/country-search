@@ -7,6 +7,7 @@ const port = 5000;
 const countries = ["England", "France", "Germany", "Italy", "Spain"];
 
 app.use(cors());
+app.use(express.static(__dirname + "/build"));
 
 //default path
 app.get("/", (req, res) => {
@@ -27,6 +28,10 @@ app.get("/getCountries/:searchTerm", (req, res) => {
   }
 
   res.send(countries.filter(checkCountry));
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./build/", "index.html"));
 });
 
 app.listen(port, () => {
