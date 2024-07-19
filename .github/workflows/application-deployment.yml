@@ -1,0 +1,82 @@
+name: Build & Deploy Country Search Application
+
+on:
+  push:
+    branches:
+      - "feature/**"
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout code ☁️" #Checkouts the current repository code 
+        uses: actions/checkout@v4.1.3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: "18.x"
+          cache: 'yarn'
+          cache-dependency-path: server
+
+      - name: "Install node dependencies for backend 📦"
+        working-directory: server
+        run: yarn install --frozen-lockile
+
+      - name: "Install node dependencies for FE and build 📦"
+        working-directory: client
+        run: | 
+          yarn install --frozen-lockfile
+          yarn run build:ci
+
+      - name: "Run unit tests 🧪"
+        working-directory: client
+        run: yarn run test
+
+      - name: "Zip directory for Deployment"
+        run: zip -ryq build-artifacts.zip .
+
+      - name: "Upload artifact"
+        uses: actions/upload-artifact@v4.3.3
+        with:
+          name: build-artifacts
+          path: ./build-artifacts.zip
+          retention-days: 1
+    
+      - name: "Log in with Azure 🆔"
+        uses: azure/login@v2.1.0
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+
+#   deploy:
+#     runs-on: ubuntu-latest
+#     if: github.ref == 'refs/heads/main'
+#     steps:
+#       - name: "Log in with Azure 🆔"
+#         uses: azure/login@v2.1.0
+#         with:
+#           creds: '${{ secrets.AZURE_CREDENTIALS }}'
+
+#       - name: "Download artifact"
+#         uses: actions/download-artifact@v4.1.7
+#         with:
+#           name: build-artifacts
+      
+      - name: "Unzip build artifacts"
+        run: unzip -q -o build-artifacts.zip
+
+      - name: "Display files and folders"
+        run: |
+          ls -la 
+
+      - name: "Zip directory for App Deploy 💼"
+        run: zip deploy.zip ./* .next -qr
+
+      - name: "Deploy ZIP to Azure WebApp 🛫"
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3.0.1
+        with:
+          app-name: "work-experience"
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: country-search/deploy.zip
