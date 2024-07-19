@@ -28,7 +28,7 @@ jobs:
         working-directory: client
         run: | 
           yarn install --frozen-lockfile
-          yarn run build:ci
+          yarn run build
 
       - name: "Run unit tests 🧪"
         working-directory: client
